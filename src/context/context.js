@@ -1,9 +1,11 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-require('dotenv').config();
+// import { YOUTUBE_API_KEY } from 'react-native-dotenv';
+import Constants from 'expo-constants';
 
 const Context = createContext();
 
 const ContextProvider = ({ children }) => {
+  console.log();
   const [state, setState] = useState({
     videos: [],
     currentVideo: null,
@@ -22,7 +24,7 @@ const ContextProvider = ({ children }) => {
 
   const handleSearch = () => {
     if (!state.searchTerm.trim()) return;
-    const key = process.env.YOUTUBE_API_KEY;
+    const key = Constants.manifest.extra.youtubeApiKey;
     setState((s) => ({ ...s, loading: true }));
     fetch(
       `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&q=${state.searchTerm}&type=video&key=${key}`,

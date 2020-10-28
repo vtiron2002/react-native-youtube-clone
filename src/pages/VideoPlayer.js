@@ -51,7 +51,6 @@ const VideoPlayer = () => {
   }, [state.currentVideo]);
 
   const handleScroll = (e) => {
-    console.log(e.nativeEvent.contentOffset.y);
     if (e.nativeEvent.contentOffset.y > 0) fadeIn();
     else if (e.nativeEvent.contentOffset.y < 0) {
       fadeOut();
@@ -72,8 +71,6 @@ const VideoPlayer = () => {
           width='100%'
           videoId={currentVideo?.id.videoId}
           play={true}
-          onError={(e) => console.log(e)}
-          onPlaybackQualityChange={(q) => console.log(q)}
           volume={50}
           playbackRate={1}
           initialPlayerParams={{

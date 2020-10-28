@@ -17,7 +17,6 @@ const Card = ({ video, searched }) => {
         if (state.currentVideo === video.id.videoId)
           return setState((s) => ({ ...s, currentVideo: null }));
         setState((s) => ({ ...s, currentVideo: video }));
-        console.log(state);
       }}
       style={searched ? { ...s.card, padding: rem(0.6) } : s.card}
     >
