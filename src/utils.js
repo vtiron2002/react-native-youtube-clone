@@ -1,0 +1,1 @@
+export const rem = rem => rem * 16
