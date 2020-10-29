@@ -1,60 +1,89 @@
-import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import React from 'react';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { rem } from '../utils';
 import { FontAwesome } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { useContextData } from '../context/context';
 import { TextInput } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
+import styled from 'styled-components';
 
-const CustomIcon = ({ children, onPress }) => {
-  return (
-    <TouchableOpacity onPress={onPress} style={s.customIcon}>
-      {children}
-    </TouchableOpacity>
-  );
-};
+const StyledHeader = styled(View)`
+  flex-direction: row;
+  justify-content: space-between;
+  padding: ${rem(0.5)}px;
+`;
+
+const StyledIcon = styled(TouchableOpacity)`
+  padding: ${rem(1)}px;
+`;
+
+const StyledTextInput = styled(TextInput)`
+  flex: 1;
+  margin-left: ${rem(1)};
+  font-size: ${rem(1)};
+  color: white;
+`;
 
 const SearchHeader = () => {
   const { backOutOfSearch, state, setState, handleSearch } = useContextData();
 
   return (
-    <View style={sh.header}>
-      <TouchableOpacity onPress={backOutOfSearch} style={sh.icon}>
+    <StyledHeader>
+      <StyledIcon onPress={backOutOfSearch}>
         <Ionicons name='md-arrow-back' size={24} color='white' />
-      </TouchableOpacity>
-      <TextInput
+      </StyledIcon>
+      <StyledTextInput
         placeholder='Search'
-        style={sh.input}
         autoFocus
         onSubmitEditing={handleSearch}
         placeholderTextColor='white'
         onChangeText={(text) => setState((s) => ({ ...s, searchTerm: text }))}
         value={state.searchTerm}
       />
-      <TouchableOpacity style={sh.icon}>
+      <StyledIcon>
         <Ionicons name='ios-mic' size={24} color='white' />
-      </TouchableOpacity>
-    </View>
+      </StyledIcon>
+    </StyledHeader>
   );
 };
 
-const sh = StyleSheet.create({
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: rem(0.5),
-  },
-  input: {
-    flex: 1,
-    marginLeft: rem(1),
-    fontSize: rem(1),
-    color: 'white',
-  },
-  icon: {
-    padding: rem(0.5),
-  },
-});
+const StyledYoutubeLogo = styled(TouchableOpacity)`
+  flex-direction: row;
+  align-items: center;
+`;
+
+const StyledYoutubeLogoImage = styled(Image)`
+  height: ${rem(1.9)};
+  width: ${rem(2)};
+  resize-mode: contain;
+`;
+
+const StyledYoutubeLogoText = styled(Text)`
+  font-size: ${rem(1)};
+  font-weight: bold;
+  color: white;
+  margin-left: ${rem(0.3)};
+`;
+
+const StyledIcons = styled(View)`
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+const CustomIcon = ({ children, onPress }) => {
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      style={{
+        marginLeft: rem(1),
+      }}
+    >
+      {children}
+    </TouchableOpacity>
+  );
+};
 
 const Header = () => {
   const { state, setState } = useContextData();
@@ -67,15 +96,14 @@ const Header = () => {
   if (searching || videos.length) return <SearchHeader />;
 
   return (
-    <View style={s.header}>
-      <TouchableOpacity style={s.logo}>
-        <Image
-          style={s.logoIcon}
+    <StyledHeader>
+      <StyledYoutubeLogo>
+        <StyledYoutubeLogoImage
           source={require('../../assets/youtubeIcon.png')}
         />
-        <Text style={s.logoText}>YouTube</Text>
-      </TouchableOpacity>
-      <View style={s.icons}>
+        <StyledYoutubeLogoText>YouTube</StyledYoutubeLogoText>
+      </StyledYoutubeLogo>
+      <StyledIcons>
         <CustomIcon>
           <FontAwesome name='bell-o' size={rem(1.5)} color='white' />
         </CustomIcon>
@@ -85,41 +113,9 @@ const Header = () => {
         <CustomIcon>
           <FontAwesome name='user-circle-o' size={rem(1.5)} color='white' />
         </CustomIcon>
-      </View>
-    </View>
+      </StyledIcons>
+    </StyledHeader>
   );
 };
-
-const s = StyleSheet.create({
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-    padding: rem(0.5),
-  },
-  logo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  logoText: {
-    fontSize: rem(1),
-    fontWeight: 'bold',
-    color: 'white',
-    marginLeft: rem(0.3),
-  },
-  logoIcon: {
-    height: rem(1.9),
-    width: rem(2),
-    resizeMode: 'contain',
-  },
-  icons: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  customIcon: {
-    marginLeft: rem(1),
-  },
-});
 
 export default Header;

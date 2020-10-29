@@ -1,5 +1,5 @@
 import React from 'react';
-import { RefreshControl, StyleSheet, Text, View, FlatList } from 'react-native';
+import { Text, View, FlatList } from 'react-native';
 import { useContextData } from '../context/context';
 import Card from './HomePage/Card';
 
@@ -21,5 +21,3 @@ const SearchPage = () => {
 };
 
 export default SearchPage;
-
-const styles = StyleSheet.create({});

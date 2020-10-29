@@ -8,6 +8,8 @@ import {
   Dimensions,
   ScrollView,
   FlatList,
+  TouchableOpacity,
+  Button,
 } from 'react-native';
 import { useContextData } from '../context/context';
 import YoutubePlayer from 'react-native-youtube-iframe';
@@ -17,12 +19,63 @@ import { rem } from '../utils';
 import DATA from '../DATA.json';
 import Card from './HomePage/Card';
 
+import styled from 'styled-components';
+
 const { width, height } = Dimensions.get('screen');
+
+const AnimatedContainer = styled(Animated.View)`
+  position: absolute;
+  bottom: -100;
+  left: 0;
+  background: #202020;
+  height: ${height - Constants.statusBarHeight};
+  width: 100%;
+  justify-content: flex-start;
+`;
+
+const StyledInfoCard = styled(ScrollView)`
+  padding: ${rem(1)}px;
+  flex: 1;
+`;
+
+const StyledTitle = styled(Text)`
+  color: white;
+  font-size: ${rem(1.1)};
+  margin-bottom: ${rem(0.5)};
+`;
+
+const StyledPublishedAt = styled(Text)`
+  color: gray;
+  font-size: ${rem(0.7)};
+  margin-bottom: ${rem(0.5)};
+`;
+
+const StyledDescription = styled(Text)`
+  color: gray;
+  border-bottom-width: 2;
+  border-bottom-color: red;
+`;
+
+const StyledChannel = styled(View)`
+  border-top-color: gray;
+  border-top-width: 1px;
+  border-bottom-color: gray;
+  border-bottom-width: 1px;
+  padding: ${rem(0.5)}px;
+  margin: ${rem(1)}px 0;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const StyleChannelName = styled(Text)`
+  color: white;
+  font-size: ${rem(1.3)};
+`;
 
 const VideoPlayer = () => {
   const { state, setState } = useContextData();
   const { currentVideo } = state;
-  const [playing, setPlaying] = useState(true);
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
@@ -59,10 +112,11 @@ const VideoPlayer = () => {
   };
 
   return (
-    <Animated.View style={[s.container, { bottom: fadeAnim }]}>
+    <AnimatedContainer style={{ bottom: fadeAnim }}>
       <ScrollView
         style={{
           width: '100%',
+          maxHeight: 230,
         }}
         onScroll={(e) => handleScroll(e)}
       >
@@ -79,18 +133,22 @@ const VideoPlayer = () => {
           }}
         />
       </ScrollView>
-      <ScrollView style={s.info}>
-        <Text style={s.title}>{currentVideo?.snippet.title}</Text>
-        <Text style={s.publishedAt}>
+      <StyledInfoCard>
+        <StyledTitle>{currentVideo?.snippet.title}</StyledTitle>
+        <StyledPublishedAt>
           {new Date(currentVideo?.snippet.publishedAt).toLocaleDateString()}
-        </Text>
-        <Text style={s.description}>{currentVideo?.snippet.description}</Text>
+        </StyledPublishedAt>
+        <StyledDescription>
+          {currentVideo?.snippet.description}
+        </StyledDescription>
 
-        <View style={s.channel}>
-          <Text style={s.channelName}>
+        <StyledChannel>
+          <StyleChannelName>
             {currentVideo?.snippet.channelTitle}
-          </Text>
-        </View>
+          </StyleChannelName>
+
+          <Button title='SUBSCRIBE' color='red' />
+        </StyledChannel>
 
         <View style={{ flex: 1 }}>
           <FlatList
@@ -99,52 +157,9 @@ const VideoPlayer = () => {
             renderItem={({ item }) => <Card searched video={item} />}
           />
         </View>
-      </ScrollView>
-    </Animated.View>
+      </StyledInfoCard>
+    </AnimatedContainer>
   );
 };
-
-const s = StyleSheet.create({
-  container: {
-    position: 'absolute',
-    bottom: -100,
-    left: 0,
-    backgroundColor: 'white',
-    height: height - Constants.statusBarHeight,
-    width: '100%',
-    justifyContent: 'flex-start',
-    backgroundColor: '#202020',
-  },
-  info: {
-    padding: rem(1),
-  },
-  title: {
-    color: 'white',
-    fontSize: rem(1.1),
-    marginBottom: rem(0.5),
-  },
-  publishedAt: {
-    color: 'gray',
-    fontSize: rem(0.7),
-    marginBottom: rem(0.5),
-  },
-  description: {
-    color: 'gray',
-    borderBottomWidth: 2,
-    borderBottomColor: 'red',
-  },
-  channel: {
-    borderTopColor: 'gray',
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: 'gray',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    padding: rem(1),
-    marginVertical: rem(1),
-  },
-  channelName: {
-    color: 'white',
-    fontSize: rem(1.3),
-  },
-});
 
 export default VideoPlayer;
